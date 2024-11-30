@@ -1,14 +1,16 @@
 import random
 
-TOTAL_GAMES_PER_SIM = 10000
-TOTAL_SIMS = 100
+TOTAL_GAMES_PER_SIM = 500
+TOTAL_SIMS = 10000
 
 BASE_BET = 1
 MAX_BET = 64
 
-STARTING_BALANCE = 1000
+STARTING_BALANCE = 10000
 
-results = []
+balance_results = []
+total_winnings = 0
+avg_winnings = 0
 
 # pick a color to bet on (red = even = true, black = odd = false)
 def PickColor():
@@ -70,7 +72,7 @@ def SimulateGame():
     # subtract the bet amount from bank (make sure we have enough money)
     #print("Bank balance after betting is: {}".format(bank_balance))
     if bank_balance - current_bet_amount < 0:
-      print("Ran out of money on run {}".format(current_run))
+      #print("Ran out of money on run {}".format(current_run))
       final_balance = 0
       final_run = current_run
       bankrupt = True
@@ -119,34 +121,45 @@ def SimulateGame():
   # if we get here, it means we did not run out of money!
   final_balance = bank_balance
   final_run = current_run - 1
-  print("Final balance: {}".format(final_balance))
-  print("Final run: {}".format(final_run))
+  #print("Final balance: {}".format(final_balance))
+  #print("Final run: {}".format(final_run))
   return final_balance
 
 def SimulateBatchOfRuns():
   for run in range(0, TOTAL_SIMS):
     final_balance = SimulateGame()
-    results.append(final_balance)
+    balance_results.append(final_balance)
 
+def ProcessResults():
+  #print("Batch of balance results:")
+  #print(balance_results)
 
-#final_balance = SimulateRun()
+  # do some math to figure out if we finished above or below the average
+  total_winnings = sum(balance_results)
+  avg_winnings = total_winnings / TOTAL_SIMS
+  print("Total Winnings from all simulations: {}".format(total_winnings))
+  print("Average Winnings per simulation:     {}".format(avg_winnings))
+
+print("Simulating games...")
+
 SimulateBatchOfRuns()
 print()
-print()
-print("Batch of results:")
-print(results)
 
-# do some math to figure out if we finished above or below the average
-total_winnings = sum(results)
-avg_winnings = total_winnings / TOTAL_SIMS
-print("Total Winnings {}".format(total_winnings))
-print("Average Winnings: {}".format(avg_winnings))
+print("Simulated up to this many games per simulation: {}".format(TOTAL_GAMES_PER_SIM))
+print("NOTE: Some may early if we run out of money in bank.")
+print("Simulated this many simulations: {}".format(TOTAL_SIMS))
+print()
+
+print("Processing results...")
+
+ProcessResults()
+print()
 
 if avg_winnings > STARTING_BALANCE:
   print("We were profitable!")
 else:
   print("We lost money!")
-
+print()
 
 
 
