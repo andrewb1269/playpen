@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: Apache-2.0
+name: "PR Formatting"
+on:
+  pull_request_target:
+    types:
+      - assigned
+      - unassigned
+      - labeled
+      - unlabeled
+      - opened
+      - reopened
+      - edited
+      - converted_to_draft
+      - ready_for_review
+      - review_requested
+      - review_request_removed
+      - locked
+      - unlocked
+      - synchronize
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  statuses: write
+
+jobs:
+  title-check:
+    name: Title Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title
+        uses: step-security/action-semantic-pull-request@bc0cf74f5be4ce34accdec1ae908dff38dc5def1 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          subjectPattern: "^[\w]+(\([\w\s-]+\))?!?: .+$"
