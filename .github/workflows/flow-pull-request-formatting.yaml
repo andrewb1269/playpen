@@ -34,5 +34,3 @@ jobs:
         uses: step-security/action-semantic-pull-request@bc0cf74f5be4ce34accdec1ae908dff38dc5def1 # v6.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          headerPattern: '^[\w]+(\([\w\s-]+\))?!?: .+$'
